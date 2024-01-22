@@ -36,6 +36,6 @@ if (media >= 7.0){
 } else{
     System.out.println("Reprovado");
 }
-
+ leitor.close();
     }
 }
