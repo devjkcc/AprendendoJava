@@ -23,7 +23,7 @@ public class Arrays {
 
     for(int i = 0; i < users.length; i ++){
         User atual = new Arrays(). new User();
-        atual.setfirstname("Nome" + i);
+        atual.setfirstname("FirstName" + i);
         users[i] = atual;
     }
 
