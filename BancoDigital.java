@@ -17,7 +17,37 @@ public class BancoDigital {
         public String senha;
         public String nome;
         public float saldo;
+
+
+
+     public void setcpf(long novocpf){
+        this.cpf = novocpf;
+     }
+
+     public long getcpf(){
+        return cpf;
+     }
+
+    public void setsenha(String novaSenha){
+        this.senha = novaSenha;
+
+}    
+    public String getsenha(){
+        return senha;
     }
+     
+    public void setnome(String novoNome){
+        this.nome = novoNome;
+    }
+
+    public String getnome(){
+        return nome;
+    }
+
+    }
+
+
+    
 
     public static void main(String[] args) {
 
@@ -50,6 +80,7 @@ public class BancoDigital {
                     consultaCliente(listaClientes, scanner);
                     break;
                 case 3:
+                    AlterarDados(listaClientes, scanner, banco);
                     break;
                 case 4:
                      excluirCliente(listaClientes, scanner);
@@ -119,18 +150,64 @@ public class BancoDigital {
     }
 
     private static void cadastrarUsuario(BancoDigital banco, List<CadastradorPessoa> listaClientes, Scanner scanner) {
-        CadastradorPessoa novoCliente = banco.new CadastradorPessoa();
-
-        System.out.println("Olá, tudo bem? Vamos fazer o seu Cadastro!");
-        scanner.nextLine(); // Consumir a quebra de linha pendente
-
-        System.out.println("Digite seu nome");
-        novoCliente.nome = scanner.nextLine();
+       long cpfconsulta;
+       boolean cpfjacadastrado = false;
+       String novaSenha;
+       boolean senhajacadastrada = false;
+       boolean encerrar = false; 
+       String senhaconsultada;
+       boolean repetir = true;
+      System.out.println("Olá, tudo bem? Vamos fazer o seu Cadastro!");
+        
+         
+      CadastradorPessoa novoCliente = banco.new CadastradorPessoa();
+      while(repetir){
+       cpfjacadastrado = false;
         System.out.println("Digite seu cpf!");
-        novoCliente.cpf = scanner.nextLong();
-        scanner.nextLine(); // Consumir a quebra de linha pendente
-        System.out.println("Digite sua nova senha");
-        novoCliente.senha = scanner.nextLine();
+        cpfconsulta = scanner.nextLong();
+        scanner.nextLine();
+        for(CadastradorPessoa Cliente: listaClientes){
+         if(Cliente.getcpf() == cpfconsulta){
+            System.out.println("CPF já cadastrado, pertence a: " + Cliente.nome);
+            Cliente.setcpf(cpfconsulta);
+             cpfjacadastrado = true;
+             repetir = true;
+             break;
+         } 
+        }
+
+
+        if(!cpfjacadastrado){
+        
+        novoCliente.setcpf(cpfconsulta);
+        repetir = false;
+        break;
+       
+        }
+       } 
+        
+        while(!encerrar){
+         senhajacadastrada = false;
+         System.out.println("Digite sua senha[Maximo 6 caracteres]");
+        senhaconsultada= scanner.nextLine();
+        for(CadastradorPessoa Cliente: listaClientes){
+            if(Cliente.getsenha().equals(senhaconsultada)){
+                System.out.println("Essa senha já existe");
+                Cliente.setsenha(senhaconsultada);
+                senhajacadastrada = true;
+            }
+        if(senhaconsultada.length() != 6 ){
+         System.out.println("A senha não possui 6 caracteres");
+        } 
+        }
+        if(!senhajacadastrada && senhaconsultada.length() == 6){
+            novoCliente.setsenha(senhaconsultada);
+            encerrar = true;
+            break;
+        }
+  }
+        System.out.println("Digite seu nome");
+        novoCliente.nome=scanner.nextLine();
         System.out.println("Digite o seu saldo inicial");
         novoCliente.saldo = scanner.nextFloat();
         System.out.println("Seja  bem vindo " + novoCliente.nome);
@@ -140,27 +217,26 @@ public class BancoDigital {
     private static void consultaCliente(List<CadastradorPessoa> listaClientes, Scanner scanner) {
         System.out.println("Digite o cpf da pessoa que procura");
         long cpfconsultado = scanner.nextLong();
-
-        boolean clienteEncontrado = false;
+        boolean cpfencontrado = false;
+      
 
         for (CadastradorPessoa cliente : listaClientes) {
 
-            if (cliente.cpf == cpfconsultado) {
+            if (cliente.getcpf() == cpfconsultado) {
 
                 System.out.println("Cliente encontrado");
                 System.out.println("Nome: " + cliente.nome);
                 System.out.println("CPF: " + cliente.cpf);
                 System.out.println("Senha: " + cliente.senha);
-                clienteEncontrado = true;
+                cpfencontrado = true;
                 break;
 
-            } else {
-                System.out.println("Cliente não encontrado");
-
-            }
+            } 
 
         }
-
+             if(!cpfencontrado){
+                System.out.println("Cliente não encontrado");
+             }
     }
 
     private static void realizarDeposito(CadastradorPessoa cliente, Scanner scanner) {
@@ -304,7 +380,7 @@ public class BancoDigital {
                 CadastradorPessoa cliente = new BancoDigital(). new CadastradorPessoa();
                 cliente.nome = dados[0];
                 cliente.cpf = Long.parseLong(dados[1]);
-                cliente.senha = dados[2];
+                cliente.senha =(dados[2]);
                 cliente.saldo = Float.parseFloat(dados[3]);
                 clientes.add(cliente);
             }
@@ -315,4 +391,80 @@ public class BancoDigital {
 
     return clientes;
 }
+
+
+private static void AlterarDados(List<CadastradorPessoa> listaClientes, Scanner scanner, BancoDigital banco){
+ 
+    long cpfnovo;
+    CadastradorPessoa clientealterado = banco.new CadastradorPessoa();
+    System.out.println("Digite o seu cpf");
+    cpfnovo = scanner.nextLong();
+    scanner.nextLine();
+   boolean clienteencontrado = false;
+    for(CadastradorPessoa Cliente: listaClientes){
+    if(Cliente.getcpf() == cpfnovo) {
+
+    System.out.println("Bem vindo " + Cliente.nome);
+     clienteencontrado = true;
+     boolean sair = true;
+       while(sair){
+    
+    
+   
+
+      System.out.println("[1] - Alterar nome");
+      System.out.println("[2] - Alterar cpf");
+      System.out.println("[3] - Alterar senha");
+      System.out.println("Para sair basta digitar qualquer outro numero");
+    
+
+    
+
+        int escolha = scanner.nextInt();
+
+        switch (escolha) {
+        case 1:
+         System.out.println("Digite o novo nome");
+         Cliente.setnome(scanner.next());
+        System.out.println("Dados alterados com sucesso");
+        break;
+
+        case 2:
+        System.out.println("Digite o novo cpf");
+        Cliente.setcpf(scanner.nextLong());
+        System.out.println("Dados alterados com sucesso");
+        break;
+
+        case 3:
+        System.out.println("Digite a nova senha");
+        scanner.nextLine();
+        Cliente.setsenha(scanner.nextLine());
+        System.out.println("Dados alterados com sucesso");
+        break;
+        default:
+         System.out.println("Saindo do programa...");
+          sair = false;
+          break;
+         
+    }
+    if(!clienteencontrado){
+     System.out.println("Cliente não encontrado");
+    
+    }
+
+    } 
+    }
+
+    
+       
+        
+
+
+
+
+}
+
+
+}
+
 }
